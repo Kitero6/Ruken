@@ -103,6 +103,53 @@ DAEvoid Window::WindowContentScaleCallback(GLFWwindow* in_window, DAEfloat const
     }
 }
 
+DAEvoid Window::KeyCallback(GLFWwindow*    in_window,
+                            DAEint32 const in_key,
+                            DAEint32 const in_scan_code,
+                            DAEint32 const in_action,
+                            DAEint32 const in_mods) noexcept
+{
+
+}
+
+DAEvoid Window::CharCallback(GLFWwindow* in_window, DAEuint32 const in_codepoint) noexcept
+{
+
+}
+
+DAEvoid Window::CharModsCallback(GLFWwindow* in_window, DAEuint32 const in_codepoint, DAEint32 const in_mods) noexcept
+{
+
+}
+
+DAEvoid Window::MouseButtonCallback(GLFWwindow*    in_window,
+                                    DAEint32 const in_button,
+                                    DAEint32 const in_action,
+                                    DAEint32 const in_mods) noexcept
+{
+
+}
+
+DAEvoid Window::CursorPosCallback(GLFWwindow* in_window, DAEdouble const in_x_pos, DAEdouble const in_y_pos) noexcept
+{
+
+}
+
+DAEvoid Window::CursorEnterCallback(GLFWwindow* in_window, DAEint32 const in_entered) noexcept
+{
+
+}
+
+DAEvoid Window::ScrollCallback(GLFWwindow* in_window, DAEdouble const in_x_offset, DAEdouble const in_y_offset) noexcept
+{
+
+}
+
+DAEvoid Window::DropCallback(GLFWwindow* in_window, DAEint32 const in_path_count, DAEchar const* in_paths[]) noexcept
+{
+
+}
+
 Window* Window::GetWindowUserPointer(GLFWwindow* in_window) noexcept
 {
     return static_cast<Window*>(glfwGetWindowUserPointer(in_window));
@@ -149,6 +196,15 @@ DAEvoid Window::SetupCallbacks() const noexcept
     glfwSetWindowMaximizeCallback    (m_handle, &WindowMaximizeCallback);
     glfwSetFramebufferSizeCallback   (m_handle, &FramebufferSizeCallback);
     glfwSetWindowContentScaleCallback(m_handle, &WindowContentScaleCallback);
+
+    glfwSetKeyCallback        (m_handle, KeyCallback);
+    glfwSetCharCallback       (m_handle, CharCallback);
+    glfwSetCharModsCallback   (m_handle, CharModsCallback);
+    glfwSetMouseButtonCallback(m_handle, MouseButtonCallback);
+    glfwSetCursorPosCallback  (m_handle, CursorPosCallback);
+    glfwSetCursorEnterCallback(m_handle, CursorEnterCallback);
+    glfwSetScrollCallback     (m_handle, ScrollCallback);
+    glfwSetDropCallback       (m_handle, DropCallback);
 }
 
 DAEvoid Window::Initialize(WindowParameters&& in_parameters) noexcept

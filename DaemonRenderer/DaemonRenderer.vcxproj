@@ -256,6 +256,9 @@
     <ClInclude Include="Source\Include\Functional\ICallable.hpp" />
     <ClInclude Include="Source\Include\Functional\Method.hpp" />
     <ClInclude Include="Source\Include\Functional\ReservedEvent.hpp" />
+    <ClInclude Include="Source\Include\Input\Input.hpp" />
+    <ClInclude Include="Source\Include\Input\InputHandler.hpp" />
+    <ClInclude Include="Source\Include\Input\InputManager.hpp" />
     <ClInclude Include="Source\Include\Meta\Assert.hpp" />
     <ClInclude Include="Source\Include\Meta\HasMember.hpp" />
     <ClInclude Include="Source\Include\Meta\IndexPack.hpp" />
@@ -392,6 +395,9 @@
     <ClCompile Include="Source\Src\ECS\ComponentQuery.cpp" />
     <ClCompile Include="Source\Src\ECS\ComponentSystemBase.cpp" />
     <ClCompile Include="Source\Src\ECS\EntityAdmin.cpp" />
+    <ClCompile Include="Source\Src\Input\Input.cpp" />
+    <ClCompile Include="Source\Src\Input\InputHandler.cpp" />
+    <ClCompile Include="Source\Src\Input\InputManager.cpp" />
     <ClCompile Include="Source\Src\Main.cpp" />
     <ClCompile Include="Source\Src\Resource\Exceptions\ResourceProcessingFailure.cpp" />
     <ClCompile Include="Source\Src\Resource\ResourceIdentifier.cpp" />

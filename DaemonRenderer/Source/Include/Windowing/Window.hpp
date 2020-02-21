@@ -132,6 +132,89 @@ class Window
         static DAEvoid WindowContentScaleCallback(GLFWwindow* in_window, DAEfloat in_x_scale, DAEfloat in_y_scale) noexcept;
 
         /**
+         * \brief This is called when a key is pressed, repeated or released.
+         *
+         * \param in_window    
+         * \param in_key       
+         * \param in_scan_code 
+         * \param in_action    
+         * \param in_mods      
+         */
+        static DAEvoid KeyCallback(GLFWwindow* in_window, DAEint32 in_key, DAEint32 in_scan_code, DAEint32 in_action, DAEint32 in_mods) noexcept;
+
+        /**
+         * \brief This is called when a Unicode character is input.
+         *
+         * \param in_window    
+         * \param in_codepoint 
+         */
+        static DAEvoid CharCallback(GLFWwindow* in_window, DAEuint32 in_codepoint) noexcept;
+
+        /**
+         * \brief This is called when a Unicode character is input regardless of what modifier keys are used.
+         *
+         * \param in_window    
+         * \param in_codepoint 
+         * \param in_mods      
+         */
+        static DAEvoid CharModsCallback(GLFWwindow* in_window, DAEuint32 in_codepoint, DAEint32 in_mods) noexcept;
+
+        /**
+         * \brief This is called when a mouse button is pressed or released.
+         *
+         * \param in_window 
+         * \param in_button 
+         * \param in_action 
+         * \param in_mods   
+         *
+         * \note When a window loses input focus, it will generate synthetic mouse button release events for all pressed mouse buttons. You can tell these events
+         *       from user-generated events by the fact that the synthetic ones are generated after the focus loss event has been processed.
+         */
+        static DAEvoid MouseButtonCallback(GLFWwindow* in_window, DAEint32 in_button, DAEint32 in_action, DAEint32 in_mods) noexcept;
+
+        /**
+         * \brief This is called when the cursor is moved.
+         *
+         * \param in_window 
+         * \param in_x_pos  
+         * \param in_y_pos  
+         *
+         * \note The callback is provided with the position, in screen coordinates, relative to the upper-left corner of the content area of the window.
+         */
+        static DAEvoid CursorPosCallback(GLFWwindow* in_window, DAEdouble in_x_pos, DAEdouble in_y_pos) noexcept;
+
+        /**
+         * \brief This is called when the cursor enters or leaves the content area of the window.
+         *
+         * \param in_window  
+         * \param in_entered 
+         */
+        static DAEvoid CursorEnterCallback(GLFWwindow* in_window, DAEint32 in_entered) noexcept;
+
+        /**
+         * \brief This is called when a scrolling device is used, such as a mouse wheel or scrolling area of a touch pad.
+         *
+         * \param in_window   
+         * \param in_x_offset 
+         * \param in_y_offset
+         *
+         * \note The callback receives all scrolling input, like that from a mouse wheel or a touch pad scrolling area.
+         */
+        static DAEvoid ScrollCallback(GLFWwindow* in_window, DAEdouble in_x_offset, DAEdouble in_y_offset) noexcept;
+
+        /**
+         * \brief This is called when one or more dragged paths are dropped on the window.
+         *
+         * \param in_window     
+         * \param in_path_count 
+         * \param in_paths      
+         *
+         * \note Because the path array and its strings may have been generated specifically for that event, they are not guaranteed to be valid after the callback
+         *       has returned. If you wish to use them after the callback returns, you need to make a deep copy.
+         */
+        static DAEvoid DropCallback(GLFWwindow* in_window, DAEint32 in_path_count, DAEchar const* in_paths[]) noexcept;
+
+        /**
          * \param in_window The window whose pointer to return.
          *
          * \return The current value of the user-defined pointer of the specified window.
