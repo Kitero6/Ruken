@@ -30,6 +30,8 @@
 
 BEGIN_DAEMON_NAMESPACE
 
+class InputManager;
+
 /**
  * \brief This class manages a GLFW window.
  */
@@ -44,8 +46,9 @@ class Window
 
         #pragma region Members
 
-        GLFWwindow* m_handle;
-        String      m_name;
+        GLFWwindow*     m_handle        = nullptr;
+        String          m_name          = "";
+        InputManager*   m_input_manager = nullptr;
 
         #pragma endregion
 
@@ -134,38 +137,58 @@ class Window
         /**
          * \brief This is called when a key is pressed, repeated or released.
          *
-         * \param in_window    
-         * \param in_key       
-         * \param in_scan_code 
-         * \param in_action    
-         * \param in_mods      
+         * The key functions deal with physical keys, with layout independent key tokens named after their values in the standard US keyboard layout.
+         *
+         * The scan code of a key is specific to that platform or sometimes even to that machine.
+         * Scan codes are intended to allow users to bind keys that don't have a GLFW key token.
+         *
+         * \param in_window    The window that received the event.
+         * \param in_key       The keyboard key that was pressed or released.
+         * \param in_scan_code The system-specific scan code of the key.
+         * \param in_action    'GLFW_PRESS', 'GLFW_RELEASE' or 'GLFW_REPEAT'.
+         * \param in_mods      Bit field describing which modifier keys were held down.
+         *
+         * \note When a window loses input focus, it will generate synthetic key release events for all pressed keys. You can tell these events
+         *       from user-generated events by the fact that the synthetic ones are generated after the focus loss event has been processed.
          */
         static DAEvoid KeyCallback(GLFWwindow* in_window, DAEint32 in_key, DAEint32 in_scan_code, DAEint32 in_action, DAEint32 in_mods) noexcept;
 
         /**
          * \brief This is called when a Unicode character is input.
          *
-         * \param in_window    
-         * \param in_codepoint 
+         * The character callback is intended for Unicode text input.
+         * As it deals with characters, it is keyboard layout dependent, whereas the key callback is not.
+         * Characters do not map 1:1 to physical keys, as a key may produce zero, one or more characters.
+         *
+         * \param in_window    The window that received the event.
+         * \param in_codepoint The Unicode code point of the character.
+         *
+         * \note The character callback behaves as system text input normally does and will not be called if modifier keys are held down that would prevent
+         *       normal text input on that platform, for example a Super (Command) key on macOS or Alt key on Windows.
          */
         static DAEvoid CharCallback(GLFWwindow* in_window, DAEuint32 in_codepoint) noexcept;
 
         /**
          * \brief This is called when a Unicode character is input regardless of what modifier keys are used.
          *
-         * \param in_window    
-         * \param in_codepoint 
-         * \param in_mods      
+         * The character with modifiers callback is intended for implementing custom Unicode character input.
+         * For regular Unicode text input, see "CharCallback()".
+         * Like the character callback, the character with modifiers callback deals with characters and is keyboard layout dependent.
+         * Characters do not map 1:1 to physical keys, as a key may produce zero, one or more characters.
+         *
+         * \param in_window    The window that received the event.
+         * \param in_codepoint The Unicode code point of the character.
+         * \param in_mods      Bit field describing which modifier keys were held down.
          */
         static DAEvoid CharModsCallback(GLFWwindow* in_window, DAEuint32 in_codepoint, DAEint32 in_mods) noexcept;
 
         /**
          * \brief This is called when a mouse button is pressed or released.
          *
-         * \param in_window 
-         * \param in_button 
-         * \param in_action 
-         * \param in_mods   
+         * \param in_window The window that received the event.
+         * \param in_button The mouse button that was pressed or released.
+         * \param in_action One of 'GLFW_PRESS' or 'GLFW_RELEASE'.
+         * \param in_mods   Bit field describing which modifier keys were held down.
          *
          * \note When a window loses input focus, it will generate synthetic mouse button release events for all pressed mouse buttons. You can tell these events
          *       from user-generated events by the fact that the synthetic ones are generated after the focus loss event has been processed.
@@ -175,28 +198,26 @@ class Window
         /**
          * \brief This is called when the cursor is moved.
          *
-         * \param in_window 
-         * \param in_x_pos  
-         * \param in_y_pos  
-         *
-         * \note The callback is provided with the position, in screen coordinates, relative to the upper-left corner of the content area of the window.
+         * \param in_window The window that received the event.
+         * \param in_x_pos  The new cursor x-coordinate, relative to the left edge of the content area.
+         * \param in_y_pos  The new cursor y-coordinate, relative to the top edge of the content area.
          */
         static DAEvoid CursorPosCallback(GLFWwindow* in_window, DAEdouble in_x_pos, DAEdouble in_y_pos) noexcept;
 
         /**
          * \brief This is called when the cursor enters or leaves the content area of the window.
          *
-         * \param in_window  
-         * \param in_entered 
+         * \param in_window  The window that received the event.
+         * \param in_entered 'GLFW_TRUE' if the cursor entered the window's content area, or 'GLFW_FALSE' if it left it.
          */
         static DAEvoid CursorEnterCallback(GLFWwindow* in_window, DAEint32 in_entered) noexcept;
 
         /**
          * \brief This is called when a scrolling device is used, such as a mouse wheel or scrolling area of a touch pad.
          *
-         * \param in_window   
-         * \param in_x_offset 
-         * \param in_y_offset
+         * \param in_window   The window that received the event.
+         * \param in_x_offset The scroll offset along the x-axis.
+         * \param in_y_offset The scroll offset along the y-axis.
          *
          * \note The callback receives all scrolling input, like that from a mouse wheel or a touch pad scrolling area.
          */
@@ -205,9 +226,9 @@ class Window
         /**
          * \brief This is called when one or more dragged paths are dropped on the window.
          *
-         * \param in_window     
-         * \param in_path_count 
-         * \param in_paths      
+         * \param in_window     The window that received the event.
+         * \param in_path_count The number of dropped paths.
+         * \param in_paths      The UTF-8 encoded file and/or directory path names.
          *
          * \note Because the path array and its strings may have been generated specifically for that event, they are not guaranteed to be valid after the callback
          *       has returned. If you wish to use them after the callback returns, you need to make a deep copy.

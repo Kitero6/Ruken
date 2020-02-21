@@ -22,49 +22,18 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
+#pragma once
+
+#include "Types/FundamentalTypes.hpp"
+
+BEGIN_DAEMON_NAMESPACE
+
+enum class EState : DAEuint8
 {
-    m_subscribers.clear();
-}
+    Idle,
+    Pressed,
+    Held,
+    Released
+};
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
-{
-    m_subscribers.emplace_back(in_function);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
-{
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
-{
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
-
-    return *this;
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
-}
+END_DAEMON_NAMESPACE

@@ -22,49 +22,12 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
-{
-    m_subscribers.clear();
-}
+#pragma once
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
-{
-    m_subscribers.emplace_back(in_function);
-}
+#include "Action.hpp"
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
-{
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
-}
+BEGIN_DAEMON_NAMESPACE
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
-{
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
+template<EInputDevice> class SubInputManager;
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
-
-    return *this;
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
-}
+END_DAEMON_NAMESPACE

@@ -22,10 +22,9 @@
  *  SOFTWARE.
  */
 
-#include "Input/InputManager.hpp"
-
 #include "Input/Input.hpp"
 #include "Input/InputHandler.hpp"
+#include "Input/InputManager.hpp"
 
 /* TODO Needs to be removed when Kernel is done TODO */
 
@@ -34,6 +33,26 @@ DAEMON_NAMESPACE::InputManager* DAEMON_NAMESPACE::GInputManager = nullptr;
 /* TODO Needs to be removed when Kernel is done TODO */
 
 USING_DAEMON_NAMESPACE
+
+DAEvoid InputManager::Enqueue(Action<EInputDevice::Mouse>&& in_action)
+{
+    m_mouse_manager.Enqueue(in_action);
+}
+
+DAEvoid InputManager::Enqueue(Action<EInputDevice::Keyboard>&& in_action)
+{
+    m_keyboard_manager.Enqueue(in_action);
+}
+
+DAEvoid InputManager::EnqueueMousePosition(Vector2<DAEdouble>&& in_position)
+{
+    (void)in_position;
+}
+
+DAEvoid InputManager::EnqueueMouseScroll(Vector2<DAEdouble>&& in_value)
+{
+    (void)in_value;
+}
 
 DAEbool InputManager::Initialize() noexcept
 {
@@ -51,7 +70,8 @@ DAEbool InputManager::Initialize() noexcept
 
 DAEvoid InputManager::Update() noexcept
 {
-
+    m_mouse_manager   .Update();
+    m_keyboard_manager.Update();
 }
 
 DAEvoid InputManager::Shutdown() noexcept

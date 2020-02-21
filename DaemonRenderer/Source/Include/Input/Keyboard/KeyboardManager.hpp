@@ -24,46 +24,32 @@
 
 #pragma once
 
-#include "Vector/Vector.hpp"
+#include "Input/SubInputManager.hpp"
 
-#include "Mouse/MouseManager.hpp"
+#include "KeyboardAction.hpp"
+#include "KeyboardMapping.hpp"
 
-#include "Keyboard/KeyboardManager.hpp"
-
-#include "Debug/Logging/Logger.hpp"
+#include "Functional/Event.hpp"
 
 BEGIN_DAEMON_NAMESPACE
 
-/**
- * \brief 
- */
-class InputManager
+template<> class SubInputManager<EInputDevice::Keyboard>
 {
-    /**
-     * \brief 
-     */
-    friend class Window;
+    using Function = std::function<DAEvoid()>;
 
     private:
 
         #pragma region Members
 
-        Logger* m_logger = nullptr;
+        UnorderedSet<Action<EInputDevice::Keyboard>> m_actions;
 
-        SubInputManager<EInputDevice::Mouse>    m_mouse_manager;
-        SubInputManager<EInputDevice::Keyboard> m_keyboard_manager;
+        UnorderedMap<Action<EInputDevice::Keyboard>, Event<>> m_events;
 
         #pragma endregion
 
         #pragma region Methods
 
-        DAEvoid Enqueue(Action<EInputDevice::Mouse>&& in_action);
 
-        DAEvoid Enqueue(Action<EInputDevice::Keyboard>&& in_action);
-
-        DAEvoid EnqueueMousePosition(Vector2<DAEdouble>&& in_position);
-
-        DAEvoid EnqueueMouseScroll(Vector2<DAEdouble>&& in_value);
 
         #pragma endregion
 
@@ -71,19 +57,19 @@ class InputManager
 
         #pragma region Constructors and Destructor
 
-        InputManager() noexcept = default;
+        SubInputManager() noexcept = default;
 
-        InputManager(InputManager const& in_copy) = delete;
-        InputManager(InputManager&&      in_move) = delete;
+        SubInputManager(SubInputManager const& in_copy) = delete;
+        SubInputManager(SubInputManager&&      in_move) = delete;
 
-        ~InputManager() noexcept = default;
+        ~SubInputManager() noexcept = default;
 
         #pragma endregion
 
         #pragma region Operators
 
-        InputManager& operator=(InputManager const& in_copy) = delete;
-        InputManager& operator=(InputManager&&      in_move) = delete;
+        SubInputManager& operator=(SubInputManager const& in_copy) = delete;
+        SubInputManager& operator=(SubInputManager&&      in_move) = delete;
 
         #pragma endregion
 
@@ -91,30 +77,35 @@ class InputManager
 
         /**
          * \brief 
+         */
+        inline DAEvoid Update() noexcept;
+
+        /**
+         * \brief
          *
-         * \return 
+         * \param in_action 
          */
-        DAEbool Initialize() noexcept;
+        inline DAEvoid Enqueue(Action<EInputDevice::Keyboard> const& in_action);
 
         /**
-         * \brief 
+         * \brief
+         *
+         * \param in_action 
+         * \param in_callback 
          */
-        DAEvoid Update() noexcept;
+        inline DAEvoid AddCallback(Action<EInputDevice::Keyboard> const& in_action, Function const& in_callback);
 
         /**
-         * \brief 
+         * \brief
+         *
+         * \param in_action 
+         * \param in_callback 
          */
-        DAEvoid Shutdown() noexcept;
-
-
+        inline DAEvoid RemoveCallback(Action<EInputDevice::Keyboard> const& in_action, Function const& in_callback);
 
         #pragma endregion
 };
 
-/* TODO Needs to be removed when Kernel is done TODO */
-
-extern InputManager* GInputManager;
-
-/* TODO Needs to be removed when Kernel is done TODO */
+#include "Input/Keyboard/KeyboardManager.inl"
 
 END_DAEMON_NAMESPACE

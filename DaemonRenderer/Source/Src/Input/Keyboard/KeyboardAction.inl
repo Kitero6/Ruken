@@ -22,49 +22,24 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
+#pragma once
+
+USING_DAEMON_NAMESPACE
+
+constexpr DAEbool Action<EInputDevice::Keyboard>::operator==(Action const& in_other) const noexcept
 {
-    m_subscribers.clear();
+    return key == in_other.key && state == in_other.state;
 }
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
+constexpr DAEbool Action<EInputDevice::Keyboard>::operator!=(Action const& in_other) const noexcept
 {
-    m_subscribers.emplace_back(in_function);
+    return key != in_other.key || state != in_other.state;
 }
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
+template<> struct std::hash<Action<EInputDevice::Keyboard>>
 {
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
-{
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
-
-    return *this;
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
-}
+    DAEuint64 operator()(Action<EInputDevice::Keyboard> const& in_obj) const noexcept
+    {
+        return (std::hash<EKey>()(in_obj.key) ^ std::hash<EState>()(in_obj.state) << 1) >> 1;
+    }
+};

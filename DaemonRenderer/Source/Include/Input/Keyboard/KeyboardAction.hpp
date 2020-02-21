@@ -22,49 +22,29 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
+#pragma once
+
+#include "Input/Action.hpp"
+
+BEGIN_DAEMON_NAMESPACE
+
+template<> struct Action<EInputDevice::Keyboard>
 {
-    m_subscribers.clear();
-}
+    #pragma region Members
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
-{
-    m_subscribers.emplace_back(in_function);
-}
+    EKey    key;
+    EState  state;
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
-{
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
-}
+    #pragma endregion
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
-{
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
+    #pragma region Operators
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
+    constexpr DAEbool operator==(Action const& in_other) const noexcept;
+    constexpr DAEbool operator!=(Action const& in_other) const noexcept;
 
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
+    #pragma endregion
+};
 
-    return *this;
-}
+END_DAEMON_NAMESPACE
 
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
-}
+#include "Input/Keyboard/KeyboardAction.inl"

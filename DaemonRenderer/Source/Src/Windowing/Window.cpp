@@ -22,6 +22,8 @@
  *  SOFTWARE.
  */
 
+#include "Input/InputManager.hpp"
+
 #include "Windowing/WindowManager.hpp"
 
 USING_DAEMON_NAMESPACE
@@ -109,17 +111,41 @@ DAEvoid Window::KeyCallback(GLFWwindow*    in_window,
                             DAEint32 const in_action,
                             DAEint32 const in_mods) noexcept
 {
+    (void)in_scan_code;
+    (void)in_mods;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+            window->m_input_manager->Enqueue({ KeyboardMapping.at(in_key), static_cast<EState>(in_action) });
+    }
 }
 
 DAEvoid Window::CharCallback(GLFWwindow* in_window, DAEuint32 const in_codepoint) noexcept
 {
+    (void)in_codepoint;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+        {
+
+        }
+    }
 }
 
 DAEvoid Window::CharModsCallback(GLFWwindow* in_window, DAEuint32 const in_codepoint, DAEint32 const in_mods) noexcept
 {
+    (void)in_codepoint;
+    (void)in_mods;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+        {
+            
+        }
+    }
 }
 
 DAEvoid Window::MouseButtonCallback(GLFWwindow*    in_window,
@@ -127,27 +153,58 @@ DAEvoid Window::MouseButtonCallback(GLFWwindow*    in_window,
                                     DAEint32 const in_action,
                                     DAEint32 const in_mods) noexcept
 {
+    (void)in_mods;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+            window->m_input_manager->Enqueue({ MouseMapping.at(in_button), static_cast<EState>(in_action) });
+    }
 }
 
 DAEvoid Window::CursorPosCallback(GLFWwindow* in_window, DAEdouble const in_x_pos, DAEdouble const in_y_pos) noexcept
 {
-
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+            window->m_input_manager->EnqueueMousePosition({in_x_pos, in_y_pos });
+    }
 }
 
 DAEvoid Window::CursorEnterCallback(GLFWwindow* in_window, DAEint32 const in_entered) noexcept
 {
+    (void)in_entered;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+        {
+            
+        }
+    }
 }
 
 DAEvoid Window::ScrollCallback(GLFWwindow* in_window, DAEdouble const in_x_offset, DAEdouble const in_y_offset) noexcept
 {
-
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+            window->m_input_manager->EnqueueMousePosition({ in_x_offset, in_y_offset });
+    }
 }
 
 DAEvoid Window::DropCallback(GLFWwindow* in_window, DAEint32 const in_path_count, DAEchar const* in_paths[]) noexcept
 {
+    (void)in_path_count;
+    (void)in_paths;
 
+    if (Window* window = GetWindowUserPointer(in_window))
+    {
+        if (window->m_input_manager)
+        {
+            
+        }
+    }
 }
 
 Window* Window::GetWindowUserPointer(GLFWwindow* in_window) noexcept

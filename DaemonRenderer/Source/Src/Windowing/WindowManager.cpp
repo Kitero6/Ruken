@@ -58,7 +58,7 @@ DAEvoid WindowManager::ErrorCallback(DAEint32 const  in_error_code,
             break;
     }
 
-    // GWindowManager->m_logger->Error(message + " : " + in_description);
+    GWindowManager->m_logger->Error(message + " : " + in_description);
 }
 
 DAEvoid WindowManager::MonitorCallback(GLFWmonitor*   in_monitor,
@@ -82,6 +82,8 @@ DAEvoid WindowManager::MonitorCallback(GLFWmonitor*   in_monitor,
 DAEvoid WindowManager::JoystickCallback(DAEint32 const in_jid,
                                         DAEint32 const in_event) noexcept
 {
+    (void)in_jid;
+
     if (in_event == GLFW_CONNECTED)
     {
         // GWindowManager->m_logger->Error(String("New joystick connected : ") + glfwGetJoystickName(in_jid));

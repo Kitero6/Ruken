@@ -22,49 +22,28 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
+#pragma once
+
+#include <GLFW/glfw3.h>
+
+#include "Containers/Pair.hpp"
+#include "Containers/UnorderedMap.hpp"
+#include "Containers/UnorderedSet.hpp"
+
+#include "Input/Enums/Mouse.hpp"
+
+BEGIN_DAEMON_NAMESPACE
+
+static UnorderedMap<DAEint32, EMouseButton> MouseMapping =
 {
-    m_subscribers.clear();
-}
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_1, EMouseButton::Left),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_2, EMouseButton::Right),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_3, EMouseButton::Middle),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_4, EMouseButton::Button3),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_5, EMouseButton::Button4),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_6, EMouseButton::Button5),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_7, EMouseButton::Button6),
+    Pair<DAEint32, EMouseButton>(GLFW_MOUSE_BUTTON_8, EMouseButton::Button7),
+};
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
-{
-    m_subscribers.emplace_back(in_function);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
-{
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
-{
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
-
-    return *this;
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
-}
+END_DAEMON_NAMESPACE

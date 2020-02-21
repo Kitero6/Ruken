@@ -22,49 +22,30 @@
  *  SOFTWARE.
  */
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Reset() noexcept
+#pragma once
+
+inline DAEvoid SubInputManager<EInputDevice::Keyboard>::Update() noexcept
 {
-    m_subscribers.clear();
+    for (auto const& action : m_actions)
+    {
+        
+    }
+
+    m_actions.clear();
 }
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function const& in_function) noexcept
+inline DAEvoid SubInputManager<EInputDevice::Keyboard>::Enqueue(Action<EInputDevice::Keyboard> const& in_action)
 {
-    m_subscribers.emplace_back(in_function);
+    m_actions.emplace(in_action);
 }
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Subscribe(Function&& in_function) noexcept
+inline DAEvoid SubInputManager<EInputDevice::Keyboard>::AddCallback(Action<EInputDevice::Keyboard> const& in_action, Function const& in_callback)
 {
-    m_subscribers.emplace_back(std::forward<Function>(in_function));
+    m_events[in_action] += in_callback;
 }
 
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::Invoke(TArgs... in_args) noexcept
+inline DAEvoid SubInputManager<EInputDevice::Keyboard>::RemoveCallback(Action<EInputDevice::Keyboard> const& in_action, Function const& in_callback)
 {
-    for (Function& function : m_subscribers)
-        function(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-DAEvoid Event<TArgs...>::operator()(TArgs... in_args) noexcept
-{
-    Invoke(std::forward<TArgs>(in_args)...);
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function const& in_function) noexcept
-{
-    Subscribe(in_function);
-
-    return *this;
-}
-
-template <typename ... TArgs>
-Event<TArgs...>& Event<TArgs...>::operator+=(Function&& in_function) noexcept
-{
-    Subscribe(std::forward<Function>(in_function));
-
-    return *this;
+    (void)in_action;
+    (void)in_callback;
 }
