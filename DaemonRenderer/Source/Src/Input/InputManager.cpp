@@ -36,12 +36,12 @@ USING_DAEMON_NAMESPACE
 
 DAEvoid InputManager::Enqueue(Action<EInputDevice::Mouse>&& in_action)
 {
-    m_mouse_manager.Enqueue(in_action);
+    m_mouse_manager.Enqueue(std::forward<Action<EInputDevice::Mouse>>(in_action));
 }
 
 DAEvoid InputManager::Enqueue(Action<EInputDevice::Keyboard>&& in_action)
 {
-    m_keyboard_manager.Enqueue(in_action);
+    m_keyboard_manager.Enqueue(std::forward<Action<EInputDevice::Keyboard>>(in_action));
 }
 
 DAEvoid InputManager::EnqueueMousePosition(Vector2<DAEdouble>&& in_position)

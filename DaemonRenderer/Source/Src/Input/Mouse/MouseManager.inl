@@ -28,15 +28,31 @@ inline DAEvoid SubInputManager<EInputDevice::Mouse>::Update() noexcept
 {
     for (auto const& action : m_actions)
     {
-        
+        auto it = m_events.find(action);
+
+        if (it != m_events.end())
+        {
+            it->second.Invoke();
+        }
     }
 
     m_actions.clear();
 }
 
-inline DAEvoid SubInputManager<EInputDevice::Mouse>::Enqueue(Action<EInputDevice::Mouse> const& in_action)
+inline DAEvoid SubInputManager<EInputDevice::Mouse>::Reset() noexcept
 {
-    m_actions.emplace(in_action);
+    ClearQueue    ();
+    ClearCallbacks();
+}
+
+inline DAEvoid SubInputManager<EInputDevice::Mouse>::Enqueue(Action<EInputDevice::Mouse>&& in_action)
+{
+    m_actions.emplace(std::forward<Action<EInputDevice::Mouse>>(in_action));
+}
+
+inline DAEvoid SubInputManager<EInputDevice::Mouse>::ClearQueue() noexcept
+{
+    m_actions.clear();
 }
 
 inline DAEvoid SubInputManager<EInputDevice::Mouse>::AddCallback(Action<EInputDevice::Mouse> const& in_action, Function const& in_callback)
@@ -48,4 +64,9 @@ inline DAEvoid SubInputManager<EInputDevice::Mouse>::RemoveCallback(Action<EInpu
 {
     (void)in_action;
     (void)in_callback;
+}
+
+inline DAEvoid SubInputManager<EInputDevice::Mouse>::ClearCallbacks() noexcept
+{
+    m_events.clear();
 }

@@ -81,11 +81,21 @@ template<> class SubInputManager<EInputDevice::Keyboard>
         inline DAEvoid Update() noexcept;
 
         /**
+         * \brief 
+         */
+        inline DAEvoid Reset() noexcept;
+
+        /**
          * \brief
          *
          * \param in_action 
          */
-        inline DAEvoid Enqueue(Action<EInputDevice::Keyboard> const& in_action);
+        inline DAEvoid Enqueue(Action<EInputDevice::Keyboard>&& in_action);
+
+        /**
+         * \brief
+         */
+        inline DAEvoid ClearQueue() noexcept;
 
         /**
          * \brief
@@ -102,6 +112,11 @@ template<> class SubInputManager<EInputDevice::Keyboard>
          * \param in_callback 
          */
         inline DAEvoid RemoveCallback(Action<EInputDevice::Keyboard> const& in_action, Function const& in_callback);
+
+        /**
+         * \brief
+         */
+        inline DAEvoid ClearCallbacks() noexcept;
 
         #pragma endregion
 };
